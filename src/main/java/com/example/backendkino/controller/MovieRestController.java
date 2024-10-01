@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +45,28 @@ public class MovieRestController {
         return kommuneOptional.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }*/
+
+
+    @PostMapping("/movies")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Movie addMovie(@RequestBody Movie movie) {
+        return movieRepository.save(movie);
+    }
+
+    @DeleteMapping("/movie/{id}")
+    public ResponseEntity<String> deleteMovie(@PathVariable String id) {
+        System.out.println("Attempting to delete movie with ID: " + id);
+        if (!movieRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"message\": \"Movie not found\"}");
+        }
+        movieRepository.deleteById(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"message\": \"Movie deleted successfully\"}");
+    }
+
+
+
 }
