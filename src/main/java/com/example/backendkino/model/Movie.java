@@ -1,35 +1,93 @@
 package com.example.backendkino.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
+@Table(name = "movie")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // Primary key
+    @Column(name = "movie_id")
+    private Integer movieId; // Primary key
+
+    public Set<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<Actor> actors) {
+        this.actors = actors;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public Set<Director> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(Set<Director> directors) {
+        this.directors = directors;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(
+            name = "movie_actor",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    private Set<Actor> actors;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(
+            name = "movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(
+            name = "movie_director",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "director_id")
+    )
+    private Set<Director> directors;
+
+
+    @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "year", nullable = false)
     private String year;
+
+    @Column(name = "released", nullable = false)
     private String released;
+
+    @Column(name = "runtime", nullable = false)
     private String runtime;
-    private String genre;
-    private String director;
-    private String actors;
+
+    @Column(name = "poster", nullable = false)
     private String poster;
+
+    @Column(name = "imdbRating", nullable = false)
     private String imdbRating;
+
+    @Column(name = "imdbID", nullable = false)
     private String imdbID;
 
     public Movie(Integer id, String title, String year, String released, String runtime, String genre, String director, String actors, String poster, String imdbRating, String imdbID) {
-        this.id = id;
+        this.movieId = id;
         this.title = title;
         this.year = year;
         this.released = released;
         this.runtime = runtime;
-        this.genre = genre;
-        this.director = director;
-        this.actors = actors;
         this.poster = poster;
         this.imdbRating = imdbRating;
         this.imdbID = imdbID;
@@ -39,12 +97,12 @@ public class Movie {
     public Movie() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getMovieId() {
+        return movieId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMovieId(Integer id) {
+        this.movieId = id;
     }
 
     public String getTitle() {
@@ -77,30 +135,6 @@ public class Movie {
 
     public void setRuntime(String runtime) {
         this.runtime = runtime;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getActors() {
-        return actors;
-    }
-
-    public void setActors(String actors) {
-        this.actors = actors;
     }
 
     public String getPoster() {

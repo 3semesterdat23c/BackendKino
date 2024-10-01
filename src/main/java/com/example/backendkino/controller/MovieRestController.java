@@ -43,7 +43,7 @@ public class MovieRestController {
         if (!movieRepository.existsById(id)){
             return ResponseEntity.notFound().build();
         }
-        movie.setId(Integer.valueOf(id));
+        movie.setMovieId(Integer.valueOf(id));
         Movie updatedMovie = movieRepository.save(movie);
         return ResponseEntity.ok(updatedMovie);
 
