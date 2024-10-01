@@ -26,7 +26,7 @@ public class MovieRestController {
     private MovieRepository movieRepository;
     @GetMapping("/getMovies")
     public List<Movie> getMovies() {
-        return apiServiceGetMovies.getMovies(); // Call the method from the Test interface
+        return apiServiceGetMovies.getMovies();
     }
     @GetMapping ("/movies")
     public List<Movie> getAllMovies(){
