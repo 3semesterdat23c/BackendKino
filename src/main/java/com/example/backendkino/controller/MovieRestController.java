@@ -6,13 +6,17 @@ import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.service.ApiServiceGetMovies;
 import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class MovieRestController {
 
@@ -28,6 +32,30 @@ public class MovieRestController {
     public List<Movie> getAllMovies(){
         return movieRepository.findAll();
     }
+    @GetMapping ("/movie/{id}")
+    public ResponseEntity<Movie> getMovieById (@PathVariable String id){
+        Optional<Movie> movieOptional = movieRepository.findById(id);
+        return movieOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping ("/movie/{id}")
+    public ResponseEntity<Movie> updateMovie (@PathVariable String id, @RequestBody Movie movie){
+        if (!movieRepository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        movie.setId(Integer.valueOf(id));
+        Movie updatedMovie = movieRepository.save(movie);
+        return ResponseEntity.ok(updatedMovie);
+
+    }
+
+
+/*
+
+        kommune.setKode(kode);
+        Kommune updatedKommune = kommuneRepository.save(kommune);
+        return ResponseEntity.ok(updatedKommune);
+    }*/
 
 
     @PostMapping("/movies")
