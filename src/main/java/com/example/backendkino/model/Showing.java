@@ -21,6 +21,46 @@ public class Showing {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
+    public int getShowingId() {
+        return showingId;
+    }
+
+    public void setShowingId(int showingId) {
+        this.showingId = showingId;
+    }
+
+    public Theatre getTheatre() {
+        return theatre;
+    }
+
+    public void setTheatre(Theatre theatre) {
+        this.theatre = theatre;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
