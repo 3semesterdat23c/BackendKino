@@ -4,6 +4,7 @@ import com.example.backendkino.model.Movie;
 import com.example.backendkino.repository.MovieRepository;
 import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -26,7 +27,9 @@ import java.util.List;
     @Service
     public class ApiServiceGetMoviesimpl implements ApiServiceGetMovies {
 
-        private static final String API_KEY = "2f06ce08"; // Make sure your API key is valid
+        @Value("${api.key}")
+        private String API_KEY; // Make sure your API key is valid
+
         private static final String BASE_URL = "https://www.omdbapi.com/";
 
         @Autowired
