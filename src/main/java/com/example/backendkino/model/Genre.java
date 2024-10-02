@@ -16,9 +16,6 @@ public class Genre {
     @Column(name = "name", nullable = false)
     private String genreName;
 
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
-    private Set<Movie> movies;
-
     public Genre(String genreName) {
         this.genreName = genreName;
     }
@@ -29,14 +26,6 @@ public class Genre {
 
     public void setGenreId(int genreId) {
         this.genreId = genreId;
-    }
-
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
     }
 
     public String getGenreName() {
