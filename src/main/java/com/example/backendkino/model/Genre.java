@@ -19,6 +19,9 @@ public class Genre {
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     private Set<Movie> movies;
 
+    public Genre(String genreName) {
+        this.genreName = genreName;
+    }
 
     public int getGenreId() {
         return genreId;
