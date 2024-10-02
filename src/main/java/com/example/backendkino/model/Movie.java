@@ -82,7 +82,7 @@ public class Movie {
     @Column(name = "imdbID", nullable = false)
     private String imdbID;
 
-    public Movie(Integer id, String title, String year, String released, String runtime, String genre, String director, String actors, String poster, String imdbRating, String imdbID) {
+    public Movie(Integer id, String title, String year, String released, String runtime, String poster, String imdbRating, String imdbID) {
         this.movieId = id;
         this.title = title;
         this.year = year;
