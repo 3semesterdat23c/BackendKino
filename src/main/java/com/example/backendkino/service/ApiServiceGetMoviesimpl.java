@@ -3,6 +3,7 @@ package com.example.backendkino.service;
 import com.example.backendkino.model.Actor;
 import com.example.backendkino.model.Genre;
 import com.example.backendkino.model.Movie;
+import com.example.backendkino.repository.ActorRepository;
 import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import org.aspectj.weaver.ast.Test;
@@ -40,6 +41,8 @@ import java.util.List;
 
         @Autowired
         private GenreRepository genreRepository;
+        @Autowired
+        private ActorRepository actorRepository;
 
         @Override
         public List<Movie> getMovies() {
@@ -105,6 +108,23 @@ import java.util.List;
                                             detailedData.optString("imdbRating", "N/A"),
                                             detailedData.getString("imdbID")
                                     );
+
+                                    String actorString = detailedData.optString("Actors", "N/A");
+                                    String[] actorArray = actorString.split(",\\s*");
+
+                                    Set<Actor> actors = new HashSet<>();
+
+                                    for (String actorName : actorArray) {
+                                        Actor actor = actorRepository.findActorByFullName(actorName);
+
+                                        if (actor == null) {
+                                            actor = new Actor(actorName);
+                                            actorRepository.save(actor);
+                                        }
+                                        actors.add(actor);
+                                    }
+
+                                    movie.setActors(actors);
 
                                     String genreString = detailedData.optString("Genre", "N/A");
                                     String[] genreArray = genreString.split(",\\s*");
