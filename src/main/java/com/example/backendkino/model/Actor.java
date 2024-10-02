@@ -21,6 +21,10 @@ public class Actor {
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     private Set<Movie> movies;
 
+    public Actor(String fullName) {
+        this.fullName = fullName;
+    }
+
     public int getActorId() {
         return actorId;
     }
