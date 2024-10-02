@@ -1,6 +1,9 @@
 package com.example.backendkino.service;
 
+import com.example.backendkino.model.Actor;
+import com.example.backendkino.model.Genre;
 import com.example.backendkino.model.Movie;
+import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +14,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,9 @@ import java.util.List;
 
         @Autowired
         private MovieRepository movieRepository; // Autowire your repository
+
+        @Autowired
+        private GenreRepository genreRepository;
 
         @Override
         public List<Movie> getMovies() {
@@ -95,13 +101,27 @@ import java.util.List;
                                             detailedData.getString("Year"),
                                             detailedData.optString("Released", "N/A"),
                                             detailedData.optString("Runtime", "N/A"),
-                                            detailedData.optString("Genre", "N/A"),
-                                            detailedData.optString("Director", "N/A"),
-                                            detailedData.optString("Actors", "N/A"),
                                             detailedData.optString("Poster", "N/A"),
                                             detailedData.optString("imdbRating", "N/A"),
                                             detailedData.getString("imdbID")
                                     );
+
+                                    String genreString = detailedData.optString("Genre", "N/A");
+                                    String[] genreArray = genreString.split(",\\s*");
+
+                                    Set<Genre> genres = new HashSet<>();
+
+                                    for (String genreName : genreArray) {
+                                        Genre genre = genreRepository.findByGenreName(genreName);
+
+                                        if (genre == null) {
+                                            genre = new Genre(genreName);
+                                            genreRepository.save(genre);
+                                        }
+                                        genres.add(genre);
+                                    }
+
+                                    movie.setGenres(genres);
 
                                     // Save the movie to the database
                                     movieRepository.save(movie);
