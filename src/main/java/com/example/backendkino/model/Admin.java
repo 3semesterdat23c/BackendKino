@@ -15,7 +15,7 @@ public class Admin {
     private String username;
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "fullName", nullable = false)
+    @Column(name = "fullName", nullable = true)
     private String fullName;
 
     public int getAdminId() {
