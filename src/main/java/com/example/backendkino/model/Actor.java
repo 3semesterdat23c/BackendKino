@@ -18,6 +18,8 @@ public class Actor {
     @Column(name = "fullName", nullable = false)
     private String fullName;
 
+    public Actor() {}
+
     public Actor(String fullName) {
         this.fullName = fullName;
     }
