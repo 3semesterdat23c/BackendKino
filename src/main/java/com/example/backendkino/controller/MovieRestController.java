@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:63342")
 @RestController
 public class MovieRestController {
 
@@ -128,6 +128,16 @@ public class MovieRestController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("{\"message\": \"Movie deleted successfully\"}");
+    }
+
+    @GetMapping("/movies/search")
+    public ResponseEntity<List<Movie>> searchMoviesByTitle(@RequestParam String title) {
+        List<Movie> movies = movieRepository.findByTitle(title);
+        if (movies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(movies);
+        } else {
+            return ResponseEntity.ok(movies);
+        }
     }
 
 
