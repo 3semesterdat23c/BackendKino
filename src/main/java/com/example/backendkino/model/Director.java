@@ -16,6 +16,12 @@ public class Director {
     @Column(name = "fullName")
     private String fullName;
 
+    public Director() {}
+
+    public Director(String fullName) {
+        this.fullName = fullName;
+    }
+
     public int getDirectorId() {
         return directorId;
     }
