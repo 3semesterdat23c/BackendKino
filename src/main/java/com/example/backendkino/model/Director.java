@@ -22,6 +22,8 @@ public class Director {
         this.fullName = fullName;
     }
 
+
+
     public int getDirectorId() {
         return directorId;
     }

@@ -93,6 +93,21 @@ public class Movie {
         this.imdbID = imdbID;
     }
 
+    public Movie(String title, String year, String released, String runtime, String poster, String imdbRating, String imdbID,
+                 Set<Actor> actors, Set<Director> directors, Set<Genre> genres) {
+        this.title = title;
+        this.year = year;
+        this.released = released;
+        this.runtime = runtime;
+        this.poster = poster;
+        this.imdbRating = imdbRating;
+        this.imdbID = imdbID;
+        this.actors = actors;          // Set the actors
+        this.directors = directors;    // Set the directors
+        this.genres = genres;          // Set the genres
+    }
+
+
     // Default constructor
     public Movie() {
     }
