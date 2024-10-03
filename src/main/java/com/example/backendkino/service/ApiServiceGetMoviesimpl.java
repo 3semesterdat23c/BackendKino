@@ -113,6 +113,9 @@ import java.util.List;
                                             detailedData.getString("imdbID")
                                     );
 
+                                    //---------------------------------------------------------------------------
+                                    // SET AND SAVE DIRECTORS
+
                                     String directorString = detailedData.optString("Director", "N/A");
                                     String[] directorArray = directorString.split(",\\s*");
 
@@ -130,6 +133,9 @@ import java.util.List;
 
                                     movie.setDirectors(directors);
 
+                                    //---------------------------------------------------------------------------
+                                    // SET AND SAVE ACTORS
+
                                     String actorString = detailedData.optString("Actors", "N/A");
                                     String[] actorArray = actorString.split(",\\s*");
 
@@ -146,6 +152,9 @@ import java.util.List;
                                     }
 
                                     movie.setActors(actors);
+
+                                    //---------------------------------------------------------------------------
+                                    // SET AND SAVE GENRES
 
                                     String genreString = detailedData.optString("Genre", "N/A");
                                     String[] genreArray = genreString.split(",\\s*");
