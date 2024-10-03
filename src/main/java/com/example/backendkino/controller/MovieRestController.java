@@ -1,7 +1,13 @@
 package com.example.backendkino.controller;
 
 
+import com.example.backendkino.model.Actor;
+import com.example.backendkino.model.Director;
+import com.example.backendkino.model.Genre;
 import com.example.backendkino.model.Movie;
+import com.example.backendkino.repository.ActorRepository;
+import com.example.backendkino.repository.DirectorRepository;
+import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.service.ApiServiceGetMovies;
 import org.aspectj.weaver.ast.Test;
@@ -13,8 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -24,6 +32,12 @@ public class MovieRestController {
     private ApiServiceGetMovies apiServiceGetMovies;
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    ActorRepository actorRepository;
+    @Autowired
+    DirectorRepository directorRepository;
+    @Autowired
+    GenreRepository genreRepository;
     @GetMapping("/getMovies")
     public List<Movie> getMovies() {
         return apiServiceGetMovies.getMovies();
@@ -61,8 +75,46 @@ public class MovieRestController {
     @PostMapping("/movies")
     @ResponseStatus(HttpStatus.CREATED)
     public Movie addMovie(@RequestBody Movie movie) {
+        // Initialize empty sets to hold existing entities
+        Set<Actor> existingActors = new HashSet<>();
+        Set<Director> existingDirectors = new HashSet<>();
+        Set<Genre> existingGenres = new HashSet<>();
+
+        // Process actors
+        for (Actor actor : movie.getActors()) {
+            Actor existingActor = actorRepository.findActorByFullName(actor.getFullName());
+            if (existingActor == null) {
+                existingActor = new Actor(actor.getFullName());
+            }
+            existingActors.add(existingActor);
+        }
+        movie.setActors(existingActors);
+
+        // Process directors
+        for (Director director : movie.getDirectors()) {
+            Director existingDirector = directorRepository.findDirectorByFullName(director.getFullName());
+            if (existingDirector == null) {
+                existingDirector = new Director(director.getFullName());
+            }
+            existingDirectors.add(existingDirector);
+        }
+        movie.setDirectors(existingDirectors);
+
+        // Process genres
+        for (Genre genre : movie.getGenres()) {
+            Genre existingGenre = genreRepository.findByGenreName(genre.getGenreName());
+            if (existingGenre == null) {
+                existingGenre = new Genre(genre.getGenreName());
+            }
+            existingGenres.add(existingGenre);
+        }
+        movie.setGenres(existingGenres);
+
+        // Save the movie entity
         return movieRepository.save(movie);
     }
+
+
 
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable String id) {

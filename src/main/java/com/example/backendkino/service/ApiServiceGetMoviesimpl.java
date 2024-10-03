@@ -33,8 +33,8 @@ import java.util.List;
     @Service
     public class ApiServiceGetMoviesimpl implements ApiServiceGetMovies {
 
-        @Value("${api.key}")
-        private String API_KEY; // Make sure your API key is valid
+        //@Value("${api.key}")
+        private String API_KEY = "2f06ce08"; // Make sure your API key is valid
 
         private static final String BASE_URL = "https://www.omdbapi.com/";
 
@@ -56,7 +56,7 @@ import java.util.List;
         private List<Movie> fetchMovies() {
             List<Movie> results = new ArrayList<>();
 
-            for (int page = 1; page <= 5; page++) {
+            for (int page = 1; page <= 2; page++) {
                 try {
                     String urlString = BASE_URL + "?s=movie&type=movie&page=" + page + "&apikey=" + API_KEY;
                     URL url = new URL(urlString);
