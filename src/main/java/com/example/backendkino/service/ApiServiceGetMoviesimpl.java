@@ -113,64 +113,16 @@ import java.util.List;
                                             detailedData.getString("imdbID")
                                     );
 
-                                    //---------------------------------------------------------------------------
-                                    // SET AND SAVE DIRECTORS
-
-                                    String directorString = detailedData.optString("Director", "N/A");
-                                    String[] directorArray = directorString.split(",\\s*");
-
-                                    Set<Director> directors = new HashSet<>();
-
-                                    for (String directorName : directorArray) {
-                                        Director director = directorRepository.findDirectorByFullName(directorName);
-
-                                        if (director == null) {
-                                            director = new Director(directorName);
-                                            directorRepository.save(director);
-                                        }
-                                        directors.add(director);
-                                    }
-
+                                    //Set and save directors
+                                    Set<Director> directors = createAndReturnDirectors(detailedData.optString("Director", "N/A"));
                                     movie.setDirectors(directors);
 
-                                    //---------------------------------------------------------------------------
-                                    // SET AND SAVE ACTORS
-
-                                    String actorString = detailedData.optString("Actors", "N/A");
-                                    String[] actorArray = actorString.split(",\\s*");
-
-                                    Set<Actor> actors = new HashSet<>();
-
-                                    for (String actorName : actorArray) {
-                                        Actor actor = actorRepository.findActorByFullName(actorName);
-
-                                        if (actor == null) {
-                                            actor = new Actor(actorName);
-                                            actorRepository.save(actor);
-                                        }
-                                        actors.add(actor);
-                                    }
-
+                                    //Set and save actors
+                                    Set<Actor> actors = createAndReturnActors(detailedData.optString("Actors", "N/A"));
                                     movie.setActors(actors);
 
-                                    //---------------------------------------------------------------------------
-                                    // SET AND SAVE GENRES
-
-                                    String genreString = detailedData.optString("Genre", "N/A");
-                                    String[] genreArray = genreString.split(",\\s*");
-
-                                    Set<Genre> genres = new HashSet<>();
-
-                                    for (String genreName : genreArray) {
-                                        Genre genre = genreRepository.findByGenreName(genreName);
-
-                                        if (genre == null) {
-                                            genre = new Genre(genreName);
-                                            genreRepository.save(genre);
-                                        }
-                                        genres.add(genre);
-                                    }
-
+                                    //Set and save genres
+                                    Set<Genre> genres = createAndReturnGenres(detailedData.optString("Genre", "N/A"));
                                     movie.setGenres(genres);
 
                                     // Save the movie to the database
@@ -194,10 +146,54 @@ import java.util.List;
             return results; // Return the list of Movie objects
         }
 
+        private Set<Director> createAndReturnDirectors(String directorString) {
+            String[] directorArray = directorString.split(",\\s*");
 
+            Set<Director> directors = new HashSet<>();
 
+            for (String directorName : directorArray) {
+                Director director = directorRepository.findDirectorByFullName(directorName);
+
+                if (director == null) {
+                    director = new Director(directorName);
+                    directorRepository.save(director);
+                }
+                directors.add(director);
+            }
+            return directors;
+        }
+
+        private Set<Actor> createAndReturnActors(String actorString) {
+            String[] actorArray = actorString.split(",\\s*");
+
+            Set<Actor> actors = new HashSet<>();
+
+            for (String actorName : actorArray) {
+                Actor actor = actorRepository.findActorByFullName(actorName);
+
+                if (actor == null) {
+                    actor = new Actor(actorName);
+                    actorRepository.save(actor);
+                }
+                actors.add(actor);
+            }
+            return actors;
+        }
+
+        private Set<Genre> createAndReturnGenres(String genreString) {
+            String[] genreArray = genreString.split(",\\s*");
+
+            Set<Genre> genres = new HashSet<>();
+
+            for (String genreName : genreArray) {
+                Genre genre = genreRepository.findByGenreName(genreName);
+
+                if (genre == null) {
+                    genre = new Genre(genreName);
+                    genreRepository.save(genre);
+                }
+                genres.add(genre);
+            }
+            return genres;
+        }
     }
-
-
-
-
