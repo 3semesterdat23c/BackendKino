@@ -2,6 +2,8 @@ package com.example.backendkino.model;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "theatre")
 public class Theatre {
@@ -13,6 +15,9 @@ public class Theatre {
 
     @Column(name = "seatRows", nullable = false)
     private int seatRows;
+
+    @Column(name = "seatsPerRow", nullable = false)
+    private int seatsPerRow;
 
     public int getTheatreId() {
         return theatreId;
@@ -37,7 +42,4 @@ public class Theatre {
     public void setSeatsPerRow(int seatsPerRow) {
         this.seatsPerRow = seatsPerRow;
     }
-
-    @Column(name = "seatsPerRow", nullable = false)
-    private int seatsPerRow;
 }

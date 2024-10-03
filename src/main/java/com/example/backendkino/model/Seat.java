@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name ="seat")
+@Table(name = "seat")
 public class Seat {
 
     @Id
@@ -20,7 +20,7 @@ public class Seat {
     @Column(name = "seatNumber", nullable = false)
     private int seatNumber;
 
-    @Column(name = "rowNumber", nullable = false)
+    @Column(name = "row_Num", nullable = false)
     private int rowNumber;
 
     public int getSeatId() {
