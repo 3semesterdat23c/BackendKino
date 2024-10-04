@@ -4,40 +4,50 @@ import com.example.backendkino.model.Booking;
 import com.example.backendkino.model.Seat;
 import com.example.backendkino.model.Showing;
 import com.example.backendkino.repository.BookingRepository;
-import com.example.backendkino.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class BookingService {
+
     @Autowired
     private BookingRepository bookingRepository;
 
+    public Booking createBooking(String email, Showing showing, Set<Seat> seatsToBeBooked) {
+        Booking booking = new Booking();
+        booking.setEmail(email);
+        booking.setShowing(showing);
+        booking.setSeats(seatsToBeBooked);
+        return bookingRepository.save(booking);
+    }
 
+    public Set<Booking> getAllBookings() {
+        return new HashSet<>(bookingRepository.findAll());
+    }
 
-    public Booking createBooking(String email, Showing showing, Set<Seat> seats) {
-        if (email == null || showing == null || seats == null || seats.isEmpty()) {
-            throw new IllegalArgumentException("Invalid input: email, showing, and seats must not be null, and seats must not be empty.");
+    public Booking getBookingById(int id) {
+        return bookingRepository.findById(id).orElse(null);
+    }
+
+    public Booking updateBooking(int id, Booking updatedBooking) {
+        Booking existingBooking = bookingRepository.findById(id).orElse(null);
+        if (existingBooking == null) {
+            throw new IllegalArgumentException("Booking not found");
         }
-        Set<Seat> alreadyBookedSeats = bookingRepository.findAllByShowing(showing).getSeats();
-
-        for (Seat seat : seats) {
-            if (alreadyBookedSeats.contains(seat)) {
-                throw new IllegalArgumentException("One or more seats are already booked.");
-            }
-        }
-
-
-        Booking newBooking = new Booking(seats, showing, email);
-
-
-        bookingRepository.save(newBooking);
-
-        return newBooking;
+        existingBooking.setSeats(updatedBooking.getSeats());
+        existingBooking.setShowing(updatedBooking.getShowing());
+        existingBooking.setEmail(updatedBooking.getEmail());
+        return bookingRepository.save(existingBooking);
     }
 
 
+    public void deleteBooking(int id) {
+        if (!bookingRepository.existsById(id)) {
+            throw new IllegalArgumentException("Booking not found");
+        }
+        bookingRepository.deleteById(id);
+    }
 }

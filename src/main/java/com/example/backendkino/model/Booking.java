@@ -1,5 +1,6 @@
 package com.example.backendkino.model;
 
+import com.example.backendkino.service.BookingService;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -33,6 +34,8 @@ public class Booking {
         this.showing = showing;
         this.email = email;
     }
+
+    public Booking(){}
 
     public int getBookingId() {
         return bookingId;
