@@ -16,11 +16,10 @@ public class InitDatabase {
     private MovieRepository movieRepository;
 
     @Autowired
-    private ApiServiceGetMovies apiServiceGetMovies; // Service to fetch movies from API
+    private ApiServiceGetMovies apiServiceGetMovies;
 
     @PostConstruct
     public void init() {
-        // Check if the database is empty before fetching movies
         if (movieRepository.count() == 0) {
             List<Movie> movies = apiServiceGetMovies.getMovies();
             movieRepository.saveAll(movies);
