@@ -10,6 +10,7 @@ import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +29,17 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
 
     private static final String BASE_URL = "https://www.omdbapi.com/";
 
-    private final MovieRepository movieRepository;
-    private final GenreRepository genreRepository;
-    private final ActorRepository actorRepository;
-    private final DirectorRepository directorRepository;
+    @Autowired
+    private MovieRepository movieRepository;
 
-    public ApiServiceGetMoviesImpl(MovieRepository movieRepository, GenreRepository genreRepository,
-                                   ActorRepository actorRepository, DirectorRepository directorRepository) {
-        this.movieRepository = movieRepository;
-        this.genreRepository = genreRepository;
-        this.actorRepository = actorRepository;
-        this.directorRepository = directorRepository;
-    }
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private ActorRepository actorRepository;
+
+    @Autowired
+    private DirectorRepository directorRepository;
 
     @Override
     @Transactional
@@ -49,7 +49,7 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
 
     private List<Movie> fetchMoviesFromAPI() {
         List<Movie> movieList = new ArrayList<>();
-        for (int page = 1; page <= 2; page++) { // Limit to 2 pages for now
+        for (int page = 1; page <= 2; page++) {
             try {
                 String urlString = BASE_URL + "?s=movie&type=movie&page=" + page + "&apikey=" + apiKey;
                 HttpURLConnection conn = createHttpConnection(urlString);
