@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
@@ -77,7 +78,7 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
 
                 conn.disconnect();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error fetching movies from API on page " + page + ": " + e.getMessage());
             }
         }
         return movieList;
@@ -104,7 +105,7 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
 
             conn.disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error fetching movie details for IMDb ID " + imdbID + ": " + e.getMessage());
         }
     }
 
@@ -181,7 +182,8 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
     }
 
     private HttpURLConnection createHttpConnection(String urlString) throws Exception {
-        URL url = new URL(urlString);
+        URI uri = new URI(urlString); // Create a URI from the string
+        URL url = uri.toURL(); // Convert the URI to a URL
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         return conn;
