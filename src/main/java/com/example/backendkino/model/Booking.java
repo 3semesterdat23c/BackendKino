@@ -21,6 +21,19 @@ public class Booking {
     )
     private Set<Seat> seats;
 
+    @ManyToOne
+    @JoinColumn(name = "showing_id", nullable = false)
+    private Showing showing;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    public Booking(Set<Seat> seats, Showing showing, String email) {
+        this.seats = seats;
+        this.showing = showing;
+        this.email = email;
+    }
+
     public int getBookingId() {
         return bookingId;
     }
@@ -52,13 +65,4 @@ public class Booking {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "showing_id", nullable = false)
-    private Showing showing;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-
 }
