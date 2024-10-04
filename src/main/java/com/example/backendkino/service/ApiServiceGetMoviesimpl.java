@@ -8,10 +8,11 @@ import com.example.backendkino.repository.ActorRepository;
 import com.example.backendkino.repository.DirectorRepository;
 import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
-import org.aspectj.weaver.ast.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,181 +20,181 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+@Service
+public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-    @Service
-    public class ApiServiceGetMoviesimpl implements ApiServiceGetMovies {
+    @Value("${api.key}")
+    private String apiKey;
 
-        //@Value("${api.key}")
-        private String API_KEY = "2f06ce08"; // Make sure your API key is valid
+    private static final String BASE_URL = "https://www.omdbapi.com/";
 
-        private static final String BASE_URL = "https://www.omdbapi.com/";
+    private final MovieRepository movieRepository;
+    private final GenreRepository genreRepository;
+    private final ActorRepository actorRepository;
+    private final DirectorRepository directorRepository;
 
-        @Autowired
-        private MovieRepository movieRepository; // Autowire your repository
+    public ApiServiceGetMoviesImpl(MovieRepository movieRepository, GenreRepository genreRepository,
+                                   ActorRepository actorRepository, DirectorRepository directorRepository) {
+        this.movieRepository = movieRepository;
+        this.genreRepository = genreRepository;
+        this.actorRepository = actorRepository;
+        this.directorRepository = directorRepository;
+    }
 
-        @Autowired
-        private GenreRepository genreRepository;
-        @Autowired
-        private ActorRepository actorRepository;
-        @Autowired
-        private DirectorRepository directorRepository;
+    @Override
+    @Transactional
+    public List<Movie> getMovies() {
+        return fetchMoviesFromAPI();
+    }
 
-        @Override
-        public List<Movie> getMovies() {
-            return fetchMovies(); // Call the method to fetch movies
-        }
+    private List<Movie> fetchMoviesFromAPI() {
+        List<Movie> movieList = new ArrayList<>();
+        for (int page = 1; page <= 2; page++) { // Limit to 2 pages for now
+            try {
+                String urlString = BASE_URL + "?s=movie&type=movie&page=" + page + "&apikey=" + apiKey;
+                HttpURLConnection conn = createHttpConnection(urlString);
 
-        private List<Movie> fetchMovies() {
-            List<Movie> results = new ArrayList<>();
+                if (conn.getResponseCode() == 200) {
+                    String response = readResponse(conn);
+                    JSONObject data = new JSONObject(response);
 
-            for (int page = 1; page <= 2; page++) {
-                try {
-                    String urlString = BASE_URL + "?s=movie&type=movie&page=" + page + "&apikey=" + API_KEY;
-                    URL url = new URL(urlString);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-
-                    if (conn.getResponseCode() == 200) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        StringBuilder response = new StringBuilder();
-                        String inputLine;
-
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-
-                        JSONObject data = new JSONObject(response.toString());
-
-                        if (data.has("Error")) {
-                            System.out.println("API Error: " + data.getString("Error"));
-                            continue;
-                        }
-
-                        if (data.has("Search")) {
-                            JSONArray movies = data.getJSONArray("Search");
-                            for (int i = 0; i < movies.length(); i++) {
-                                JSONObject movieJson = movies.getJSONObject(i);
-                                String imdbID = movieJson.getString("imdbID");
-
-                                // Fetch detailed movie information
-                                String detailedUrlString = BASE_URL + "?i=" + imdbID + "&apikey=" + API_KEY;
-                                URL detailedUrl = new URL(detailedUrlString);
-                                HttpURLConnection detailedConn = (HttpURLConnection) detailedUrl.openConnection();
-                                detailedConn.setRequestMethod("GET");
-
-                                if (detailedConn.getResponseCode() == 200) {
-                                    BufferedReader detailedIn = new BufferedReader(new InputStreamReader(detailedConn.getInputStream()));
-                                    StringBuilder detailedResponse = new StringBuilder();
-                                    while ((inputLine = detailedIn.readLine()) != null) {
-                                        detailedResponse.append(inputLine);
-                                    }
-                                    detailedIn.close();
-
-                                    // Parse detailed movie information
-                                    JSONObject detailedData = new JSONObject(detailedResponse.toString());
-                                    Movie movie = new Movie(
-                                            null, // ID will be generated by the database
-                                            detailedData.getString("Title"),
-                                            detailedData.getString("Year"),
-                                            detailedData.optString("Released", "N/A"),
-                                            detailedData.optString("Runtime", "N/A"),
-                                            detailedData.optString("Poster", "N/A"),
-                                            detailedData.optString("imdbRating", "N/A"),
-                                            detailedData.getString("imdbID")
-                                    );
-
-                                    //Set and save directors
-                                    Set<Director> directors = createAndReturnDirectors(detailedData.optString("Director", "N/A"));
-                                    movie.setDirectors(directors);
-
-                                    //Set and save actors
-                                    Set<Actor> actors = createAndReturnActors(detailedData.optString("Actors", "N/A"));
-                                    movie.setActors(actors);
-
-                                    //Set and save genres
-                                    Set<Genre> genres = createAndReturnGenres(detailedData.optString("Genre", "N/A"));
-                                    movie.setGenres(genres);
-
-                                    // Save the movie to the database
-                                    movieRepository.save(movie);
-                                    results.add(movie);
-                                }
-
-                                detailedConn.disconnect();
-                            }
-                        }
-                    } else {
-                        System.out.println("HTTP error code: " + conn.getResponseCode());
+                    if (data.has("Error")) {
+                        System.out.println("API Error: " + data.getString("Error"));
+                        continue;
                     }
 
-                    conn.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    if (data.has("Search")) {
+                        JSONArray movies = data.getJSONArray("Search");
+                        for (int i = 0; i < movies.length(); i++) {
+                            JSONObject movieJson = movies.getJSONObject(i);
+                            String imdbID = movieJson.getString("imdbID");
+                            fetchAndSaveMovieDetails(imdbID, movieList);
+                        }
+                    }
+                } else {
+                    System.out.println("HTTP error code: " + conn.getResponseCode());
                 }
-            }
 
-            return results; // Return the list of Movie objects
+                conn.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return movieList;
+    }
 
-        private Set<Director> createAndReturnDirectors(String directorString) {
-            String[] directorArray = directorString.split(",\\s*");
-
-            Set<Director> directors = new HashSet<>();
-
-            for (String directorName : directorArray) {
-                Director director = directorRepository.findDirectorByFullName(directorName);
-
-                if (director == null) {
-                    director = new Director(directorName);
-                    directorRepository.save(director);
-                }
-                directors.add(director);
+    private void fetchAndSaveMovieDetails(String imdbID, List<Movie> movieList) {
+        try {
+            if (movieRepository.existsByImdbID(imdbID)) {
+                System.out.println("Movie with IMDb ID " + imdbID + " already exists.");
+                return;
             }
-            return directors;
-        }
 
-        private Set<Actor> createAndReturnActors(String actorString) {
-            String[] actorArray = actorString.split(",\\s*");
+            String detailedUrlString = BASE_URL + "?i=" + imdbID + "&apikey=" + apiKey;
+            HttpURLConnection conn = createHttpConnection(detailedUrlString);
 
-            Set<Actor> actors = new HashSet<>();
+            if (conn.getResponseCode() == 200) {
+                String response = readResponse(conn);
+                JSONObject detailedData = new JSONObject(response);
 
-            for (String actorName : actorArray) {
-                Actor actor = actorRepository.findActorByFullName(actorName);
-
-                if (actor == null) {
-                    actor = new Actor(actorName);
-                    actorRepository.save(actor);
-                }
-                actors.add(actor);
+                Movie movie = mapMovieFromJson(detailedData);
+                movieRepository.save(movie); // Save movie to the database
+                movieList.add(movie); // Add to the result list
             }
-            return actors;
-        }
 
-        private Set<Genre> createAndReturnGenres(String genreString) {
-            String[] genreArray = genreString.split(",\\s*");
-
-            Set<Genre> genres = new HashSet<>();
-
-            for (String genreName : genreArray) {
-                Genre genre = genreRepository.findByGenreName(genreName);
-
-                if (genre == null) {
-                    genre = new Genre(genreName);
-                    genreRepository.save(genre);
-                }
-                genres.add(genre);
-            }
-            return genres;
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    private Movie mapMovieFromJson(JSONObject detailedData) {
+        Movie movie = new Movie(
+                null,
+                detailedData.getString("Title"),
+                detailedData.getString("Year"),
+                detailedData.optString("Released", "N/A"),
+                detailedData.optString("Runtime", "N/A"),
+                detailedData.optString("Poster", "N/A"),
+                detailedData.optString("imdbRating", "N/A"),
+                detailedData.getString("imdbID")
+        );
+
+        Set<Director> directors = createAndReturnDirectors(detailedData.optString("Director", "N/A"));
+        movie.setDirectors(directors);
+
+        Set<Actor> actors = createAndReturnActors(detailedData.optString("Actors", "N/A"));
+        movie.setActors(actors);
+
+        Set<Genre> genres = createAndReturnGenres(detailedData.optString("Genre", "N/A"));
+        movie.setGenres(genres);
+
+        return movie;
+    }
+
+    private Set<Director> createAndReturnDirectors(String directorString) {
+        String[] directorArray = directorString.split(",\\s*");
+        Set<Director> directors = new HashSet<>();
+
+        for (String directorName : directorArray) {
+            Director director = directorRepository.findDirectorByFullName(directorName);
+            if (director == null) {
+                director = new Director(directorName);
+                directorRepository.save(director);
+            }
+            directors.add(director);
+        }
+
+        return directors;
+    }
+
+    private Set<Actor> createAndReturnActors(String actorString) {
+        String[] actorArray = actorString.split(",\\s*");
+        Set<Actor> actors = new HashSet<>();
+
+        for (String actorName : actorArray) {
+            Actor actor = actorRepository.findActorByFullName(actorName);
+            if (actor == null) {
+                actor = new Actor(actorName);
+                actorRepository.save(actor);
+            }
+            actors.add(actor);
+        }
+
+        return actors;
+    }
+
+    private Set<Genre> createAndReturnGenres(String genreString) {
+        String[] genreArray = genreString.split(",\\s*");
+        Set<Genre> genres = new HashSet<>();
+
+        for (String genreName : genreArray) {
+            Genre genre = genreRepository.findByGenreName(genreName);
+            if (genre == null) {
+                genre = new Genre(genreName);
+                genreRepository.save(genre);
+            }
+            genres.add(genre);
+        }
+
+        return genres;
+    }
+
+    private HttpURLConnection createHttpConnection(String urlString) throws Exception {
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        return conn;
+    }
+
+    private String readResponse(HttpURLConnection conn) throws Exception {
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
+    }
+}
