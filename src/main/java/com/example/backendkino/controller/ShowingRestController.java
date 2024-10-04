@@ -25,4 +25,9 @@ public class ShowingRestController {
     public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, @RequestParam LocalDateTime localDateTime,@RequestParam  Theatre theatre) {
         return showingService.createShowing(theatre, movie, localDateTime, admin);
     }
+
+    @DeleteMapping("/showing/delete")
+    public void deleteShowing(@RequestParam Showing showing){
+        showingService.deleteShowing(showing);
+    }
 }

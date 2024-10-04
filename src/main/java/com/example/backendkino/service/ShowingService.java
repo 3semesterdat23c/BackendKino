@@ -39,5 +39,9 @@ public class ShowingService {
     return showing;
     }
 
+    public void deleteShowing(Showing showing){
+        showingRepository.delete(showing);
+    }
+
 
 }
