@@ -35,13 +35,8 @@ public class ShowingService {
         showing.setAdmin(admin);
         showing.setTheatre(theatre);
         showing.setDateTime(localDateTime);
-        Showing savedShowing = showingRepository.save(showing);
+        showingRepository.save(showing);
     return showing;
     }
-
-    public void deleteShowing(Showing showing){
-        showingRepository.delete(showing);
-    }
-
 
 }
