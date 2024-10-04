@@ -9,4 +9,5 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     List<Movie> findByTitle(String string);
     List<Movie> findByTitleContaining(String string);
 
+
 }
