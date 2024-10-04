@@ -16,12 +16,6 @@ import java.util.Set;
 @CrossOrigin
 public class BookingRestController {
 
-    @Autowired
-    BookingService bookingService;@RestController
-    @RequestMapping("/booking")
-    @CrossOrigin
-    public class BookingRestController {
-
         @Autowired
         private BookingService bookingService;
 
@@ -46,11 +40,3 @@ public class BookingRestController {
             }
         }
     }
-
-
-    @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestParam Set<Seat> seatsToBeBooked, @RequestBody Showing showing, @RequestParam String email){
-
-    }
-
-}
