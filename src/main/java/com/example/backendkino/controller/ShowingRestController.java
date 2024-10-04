@@ -8,10 +8,8 @@ import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.repository.TheatreRepository;
 import com.example.backendkino.service.ShowingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +21,7 @@ public class ShowingRestController {
     ShowingService showingService;
 
     @PostMapping("/showing/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, LocalDateTime localDateTime, Theatre theatre) {
         return showingService.createShowing(theatre, movie, localDateTime, admin);
     }
