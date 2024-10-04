@@ -22,7 +22,7 @@ public class ShowingRestController {
 
     @PostMapping("/showing/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, LocalDateTime localDateTime, Theatre theatre) {
+    public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, @RequestParam LocalDateTime localDateTime,@RequestParam  Theatre theatre) {
         return showingService.createShowing(theatre, movie, localDateTime, admin);
     }
 }
