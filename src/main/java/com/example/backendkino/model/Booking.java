@@ -1,5 +1,6 @@
 package com.example.backendkino.model;
 
+import com.example.backendkino.service.BookingService;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -20,6 +21,21 @@ public class Booking {
             inverseJoinColumns = @JoinColumn(name = "seat_id") // Foreign key to Seat
     )
     private Set<Seat> seats;
+
+    @ManyToOne
+    @JoinColumn(name = "showing_id", nullable = false)
+    private Showing showing;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    public Booking(Set<Seat> seats, Showing showing, String email) {
+        this.seats = seats;
+        this.showing = showing;
+        this.email = email;
+    }
+
+    public Booking(){}
 
     public int getBookingId() {
         return bookingId;
@@ -52,13 +68,4 @@ public class Booking {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "showing_id", nullable = false)
-    private Showing showing;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-
 }
