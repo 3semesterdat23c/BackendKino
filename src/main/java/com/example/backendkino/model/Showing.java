@@ -79,4 +79,6 @@ public class Showing {
 
     @Column(name = "dateTime", nullable = false)
     private LocalDateTime dateTime;
+
+    
 }
