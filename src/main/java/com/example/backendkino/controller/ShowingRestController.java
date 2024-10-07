@@ -25,14 +25,15 @@ public class ShowingRestController {
 
     @Autowired
     ShowingRepository showingRepository;
+
     @PostMapping("/showing/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, @RequestParam LocalDateTime localDateTime,@RequestParam  Theatre theatre) {
+    public Showing createShowing(@RequestParam Movie movie, @RequestParam Admin admin, @RequestParam LocalDateTime localDateTime, @RequestParam Theatre theatre) {
         return showingService.createShowing(theatre, movie, localDateTime, admin);
     }
 
     @DeleteMapping("/showing/delete/{id}")
-    public ResponseEntity<String> deleteShowing(@PathVariable String id){
+    public ResponseEntity<String> deleteShowing(@PathVariable String id) {
         if (!showingRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -43,5 +44,4 @@ public class ShowingRestController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("{\"message\": \"Movie deleted successfully\"}");
     }
-    }
-
+}
