@@ -44,4 +44,4 @@ public class ShowingRestController {
                 .body("{\"message\": \"Movie deleted successfully\"}");
     }
     }
-}
+
