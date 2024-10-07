@@ -1,6 +1,7 @@
 package com.example.backendkino.model;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,9 @@ public class Showing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showing_id")
     private int showingId;
+
+    @Column(name = "endTime", nullable = false)
+    private LocalDateTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "theatre_id", nullable = false)
@@ -59,6 +63,14 @@ public class Showing {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     @ManyToOne
