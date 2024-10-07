@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin
 @RestController
 public class MovieRestController {
 
