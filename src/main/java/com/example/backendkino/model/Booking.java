@@ -2,9 +2,14 @@ package com.example.backendkino.model;
 
 import com.example.backendkino.service.BookingService;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
-
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "Booking")
 public class Booking {

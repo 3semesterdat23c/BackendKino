@@ -1,9 +1,15 @@
 package com.example.backendkino.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
-
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @NoArgsConstructor
 @Table(name = "director")
@@ -22,21 +28,4 @@ public class Director {
         this.fullName = fullName;
     }
 
-
-
-    public int getDirectorId() {
-        return directorId;
-    }
-
-    public void setDirectorId(int directorId) {
-        this.directorId = directorId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 }
