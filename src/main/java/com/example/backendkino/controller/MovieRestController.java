@@ -10,6 +10,7 @@ import com.example.backendkino.repository.DirectorRepository;
 import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.service.ApiServiceGetMovies;
+import jakarta.persistence.EntityNotFoundException;
 import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +45,13 @@ public class MovieRestController {
         return movieRepository.findAll();
     }
     @GetMapping ("/movie/{id}")
-    public ResponseEntity<Movie> getMovieById (@PathVariable String id){
+    public ResponseEntity<Movie> getMovieById (@PathVariable int id){
         Optional<Movie> movieOptional = movieRepository.findById(id);
         return movieOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping ("/movie/{id}")
-    public ResponseEntity<Movie> updateMovie (@PathVariable String id, @RequestBody Movie movie){
+    public ResponseEntity<Movie> updateMovie (@PathVariable int id, @RequestBody Movie movie){
         if (!movieRepository.existsById(id)){
             return ResponseEntity.notFound().build();
         }
@@ -59,7 +60,12 @@ public class MovieRestController {
         return ResponseEntity.ok(updatedMovie);
 
     }
-
+//    @GetMapping("/{movieId}")
+//    public ResponseEntity<Movie> getMovieById(@PathVariable int movieId) {
+//        Movie movie = movieRepository.findById(movieId)
+//                .orElseThrow(() -> new EntityNotFoundException("Movie not found with id: " + movieId));
+//        return ResponseEntity.ok(movie);
+//    }
 
 /*
 
@@ -114,7 +120,7 @@ public class MovieRestController {
 
 
     @DeleteMapping("/movie/{id}")
-    public ResponseEntity<String> deleteMovie(@PathVariable String id) {
+    public ResponseEntity<String> deleteMovie(@PathVariable int id) {
         System.out.println("Attempting to delete movie with ID: " + id);
         if (!movieRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
