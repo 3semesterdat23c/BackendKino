@@ -1,9 +1,17 @@
 package com.example.backendkino.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
-
+@Getter
+@Setter
+@NamedEntityGraph
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "movie")
 public class Movie {
@@ -12,29 +20,7 @@ public class Movie {
     @Column(name = "movie_id")
     private Integer movieId; // Primary key
 
-    public Set<Actor> getActors() {
-        return actors;
-    }
 
-    public void setActors(Set<Actor> actors) {
-        this.actors = actors;
-    }
-
-    public Set<Genre> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
-    }
-
-    public Set<Director> getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(Set<Director> directors) {
-        this.directors = directors;
-    }
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinTable(
@@ -108,71 +94,5 @@ public class Movie {
     }
 
 
-    // Default constructor
-    public Movie() {
-    }
 
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer id) {
-        this.movieId = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getReleased() {
-        return released;
-    }
-
-    public void setReleased(String released) {
-        this.released = released;
-    }
-
-    public String getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(String runtime) {
-        this.runtime = runtime;
-    }
-
-    public String getPoster() {
-        return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
-
-    public String getImdbRating() {
-        return imdbRating;
-    }
-
-    public void setImdbRating(String imdbRating) {
-        this.imdbRating = imdbRating;
-    }
-
-    public String getImdbID() {
-        return imdbID;
-    }
-
-    public void setImdbID(String imdbID) {
-        this.imdbID = imdbID;
-    }
 }

@@ -1,9 +1,16 @@
 package com.example.backendkino.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "genre")
 public class Genre {
@@ -16,25 +23,9 @@ public class Genre {
     @Column(name = "name", nullable = false)
     private String genreName;
 
-    public Genre() {}
 
     public Genre(String genreName) {
         this.genreName = genreName;
     }
 
-    public int getGenreId() {
-        return genreId;
-    }
-
-    public void setGenreId(int genreId) {
-        this.genreId = genreId;
-    }
-
-    public String getGenreName() {
-        return genreName;
-    }
-
-    public void setGenreName(String genreName) {
-        this.genreName = genreName;
-    }
 }

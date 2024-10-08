@@ -2,10 +2,15 @@ package com.example.backendkino.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Set;
-
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "actor")
 public class Actor {
@@ -21,22 +26,6 @@ public class Actor {
     public Actor() {}
 
     public Actor(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public int getActorId() {
-        return actorId;
-    }
-
-    public void setActorId(int actorId) {
-        this.actorId = actorId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
