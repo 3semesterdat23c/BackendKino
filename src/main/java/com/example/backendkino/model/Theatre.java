@@ -19,27 +19,5 @@ public class Theatre {
     @Column(name = "seatsPerRow", nullable = false)
     private int seatsPerRow;
 
-    public int getTheatreId() {
-        return theatreId;
-    }
 
-    public void setTheatreId(int theatreId) {
-        this.theatreId = theatreId;
-    }
-
-    public int getSeatRows() {
-        return seatRows;
-    }
-
-    public void setSeatRows(int seatRows) {
-        this.seatRows = seatRows;
-    }
-
-    public int getSeatsPerRow() {
-        return seatsPerRow;
-    }
-
-    public void setSeatsPerRow(int seatsPerRow) {
-        this.seatsPerRow = seatsPerRow;
-    }
 }

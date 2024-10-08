@@ -1,14 +1,21 @@
 package com.example.backendkino.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+@Setter
+@Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "showing")
 public class Showing {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showing_id")
@@ -25,53 +32,6 @@ public class Showing {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    public int getShowingId() {
-        return showingId;
-    }
-
-    public void setShowingId(int showingId) {
-        this.showingId = showingId;
-    }
-
-    public Theatre getTheatre() {
-        return theatre;
-    }
-
-    public void setTheatre(Theatre theatre) {
-        this.theatre = theatre;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public Admin getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
@@ -79,4 +39,5 @@ public class Showing {
 
     @Column(name = "dateTime", nullable = false)
     private LocalDateTime dateTime;
+
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "director")
 public class Director {
 
@@ -16,7 +17,6 @@ public class Director {
     @Column(name = "fullName")
     private String fullName;
 
-    public Director() {}
 
     public Director(String fullName) {
         this.fullName = fullName;
