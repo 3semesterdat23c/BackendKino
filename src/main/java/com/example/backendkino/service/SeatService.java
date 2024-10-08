@@ -30,7 +30,7 @@ public class SeatService {
     }
 
     public Set<Seat> getBookedSeatsInShowing(int showingId){
-        Showing currentShowing = showingRepository.getShowingsByShowingId(showingId);
+        Showing currentShowing = showingRepository.getShowingByShowingId(showingId);
         Set<Booking> bookingsInCurrentShowing = bookingRepository.getBookingByShowing(currentShowing);
         Set<Seat> bookedSeats = seatRepository.getSeatsByBookings(bookingsInCurrentShowing);
         return bookedSeats;

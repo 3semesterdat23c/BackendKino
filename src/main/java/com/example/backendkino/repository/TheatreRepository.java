@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface TheatreRepository extends JpaRepository<Theatre, Integer> {
     Optional<Theatre> findById(Integer theatreId);
+    Theatre getTheatresByTheatreId(int theatreId);
 }

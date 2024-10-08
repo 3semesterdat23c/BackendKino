@@ -17,4 +17,5 @@ public interface ShowingRepository extends JpaRepository<Showing, Integer> {
 
     // Find showtimes by movie ID (this method should exist as well)
     List<Showing> findShowingByMovie_MovieId(int movieId);
+    Showing getShowingByShowingId(int showingId);
 }
