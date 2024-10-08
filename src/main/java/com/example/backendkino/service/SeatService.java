@@ -29,16 +29,5 @@ public class SeatService {
         return seatsInTheater;
     }
 
-    public Set<Seat> getBookedSeatsInShowing(int showingId){
-        Showing currentShowing = showingRepository.getShowingsByShowingId(showingId);
-        Set<Booking> bookingsInCurrentShowing = bookingRepository.getBookingByShowing(currentShowing);
-        Set<Seat> bookedSeats = seatRepository.getSeatsByBookings(bookingsInCurrentShowing);
-        return bookedSeats;
-    }
 
-    public Set<Seat> getAvailableSeatsInShowing(int showingId, int theaterId){
-        Set<Seat> seatsInTheater = getSeatsFromTheater(theaterId);
-        seatsInTheater.removeAll(getBookedSeatsInShowing(showingId));
-        return seatsInTheater;
-    }
 }

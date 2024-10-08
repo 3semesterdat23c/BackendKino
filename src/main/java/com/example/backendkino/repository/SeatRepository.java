@@ -12,4 +12,5 @@ public interface SeatRepository extends JpaRepository<Seat, Integer> {
     Set<Seat> findByTheatre(Theatre theatre);
     Set<Seat> getSeatsByBookings(Set<Booking> bookings);
     List<Seat> findAllBySeatIdIn(List<Integer> seatIds);
+    Set<Seat> getSeatsByTheatre(Theatre theatre);
 }

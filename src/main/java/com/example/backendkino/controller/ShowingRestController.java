@@ -2,6 +2,7 @@ package com.example.backendkino.controller;
 
 import com.example.backendkino.model.*;
 import com.example.backendkino.repository.*;
+import com.example.backendkino.service.BookingService;
 import com.example.backendkino.service.SeatService;
 import com.example.backendkino.service.ShowingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,28 +12,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin
 @RestController
 public class ShowingRestController {
 
     @Autowired
-    ShowingService showingService;
+    private ShowingService showingService;
 
     @Autowired
-    ShowingRepository showingRepository;
+    private ShowingRepository showingRepository;
 
     @Autowired
-    SeatRepository seatRepository;
+    private SeatRepository seatRepository;
 
     @Autowired
-    BookingRepository bookingRepository;
-
+    private BookingRepository bookingRepository;
+    
     @Autowired
-    private SeatService seatService;
+    private BookingService bookingService;
+
 
     @PostMapping("/showing/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -52,13 +52,20 @@ public class ShowingRestController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("{\"message\": \"Movie deleted successfully\"}");
     }
+    
 
-    // Hent ledige sæder for en bestemt visning
-    @GetMapping("/{showingId}/seats")
-    public ResponseEntity<Set<Seat>> getAvailableSeats(@PathVariable int showingId, @RequestParam int theaterId) {
-        Set<Seat> availableSeats = seatService.getAvailableSeatsInShowing(showingId, theaterId);
-        return ResponseEntity.ok(availableSeats);
-    }
+        @GetMapping("/{showingId}/seats")
+        public ResponseEntity<Map<String, Set<Seat>>> getSeatsForShowing(@PathVariable int showingId, @PathVariable Theatre theatre) {
+            Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
+            Set<Seat> availableSeats = bookingService.getAvailableSeatsInShowing(showingId, theatre);
+
+            Map<String, Set<Seat>> response = new HashMap<>();
+            response.put("bookedSeats", bookedSeats);
+            response.put("availableSeats", availableSeats);
+
+            return ResponseEntity.ok(response);
+        }
+
 
     // Gem en booking
     @PostMapping("/booking")
