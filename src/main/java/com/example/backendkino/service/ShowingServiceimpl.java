@@ -42,6 +42,14 @@ public class ShowingServiceimpl implements ApiServicegetShowing {
         Admin admin = adminRepository.findById(showing.getAdmin().getAdminId()).orElseThrow(
                 () -> new RuntimeException("Admin not found")
         );
+
+        LocalDateTime endTime;
+        String[] runTime = movie.getRuntime().split(" ");
+        int runTimeMinutes =  Integer.valueOf(runTime[0]);
+        endTime = showing.getDateTime().plusHours(1);
+        endTime = endTime.plusMinutes(runTimeMinutes);
+        showing.setEndTime(endTime);
+
         // Sæt de hentede film og teater ind i showtime
         showing.setMovie(movie);
         showing.setTheatre(theater);
@@ -58,19 +66,21 @@ public class ShowingServiceimpl implements ApiServicegetShowing {
     public boolean isShowtimeValid(Showing newShowtime) {
         // Assuming that you want to check for showtimes on the same date and that the new showtime has a valid end time
         LocalDateTime startDateTime = newShowtime.getDateTime();
-        LocalDateTime endDateTime = newShowtime.getEndTime(); // Ensure endTime is set appropriately
+        Movie movie = movieRepository.findById(newShowtime.getMovie().getMovieId()).orElseThrow(
+                () -> new RuntimeException("Movie not found"));
 
-        List<Showing> existingShowtimes = showingRepository.findByTheatreAndDateTimeBetween(
+        List<Showing> existingShowtimes = showingRepository.findByTheatreAndDateTime(
                 newShowtime.getTheatre(),
-                startDateTime,
-                endDateTime
-        );
+                startDateTime
 
+        );
+        String[] runTime =movie.getRuntime().split(" ");
+        int runTimeMinutes =  Integer.valueOf(runTime[0]);
         for (Showing eShowtime : existingShowtimes) {
-            LocalDateTime cleaning = eShowtime.getEndTime().plusMinutes(30);
+            LocalDateTime cleaning = eShowtime.getEndTime().plusMinutes(60+runTimeMinutes);
 
             // Check for overlaps
-            if (startDateTime.isBefore(cleaning) && endDateTime.isAfter(eShowtime.getDateTime())) {
+            if (startDateTime.isBefore(cleaning)) {
                 return false; // Overlap detected
             }
         }

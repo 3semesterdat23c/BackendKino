@@ -13,7 +13,7 @@ import java.util.List;
 public interface ShowingRepository extends JpaRepository<Showing, Integer> {
 
     // Find showtimes for a specific theatre and within a date range
-    List<Showing> findByTheatreAndDateTimeBetween(Theatre theatre, LocalDateTime startDate, LocalDateTime endDate);
+    List<Showing> findByTheatreAndDateTime(Theatre theatre, LocalDateTime startDate);
 
     // Find showtimes by movie ID (this method should exist as well)
     List<Showing> findShowingByMovie_MovieId(int movieId);
