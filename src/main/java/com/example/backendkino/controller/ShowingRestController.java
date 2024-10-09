@@ -114,17 +114,22 @@ public class ShowingRestController {
     }
 
 
-        @GetMapping("/{showingId}/seats")
-        public ResponseEntity<Map<String, Set<Seat>>> getSeatsForShowing(@PathVariable int showingId) {
-            Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
-            Set<Seat> availableSeats = bookingService.getAvailableSeatsInShowing(showingId);
+    @GetMapping("/{showingId}/seats")
+    public ResponseEntity<Map<String, Object>> getSeatsForShowing(@PathVariable int showingId) {
+        Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
+        Set<Seat> allSeats = bookingService.getAllSeatsInShowing(showingId);
+        Theatre theatre = showingRepository.getShowingByShowingId(showingId).getTheatre();
 
-            Map<String, Set<Seat>> response = new HashMap<>();
-            response.put("bookedSeats", bookedSeats);
-            response.put("availableSeats", availableSeats);
+        // Creating the response map
+        Map<String, Object> response = new HashMap<>();
+        response.put("bookedSeats", bookedSeats);
+        response.put("allSeats", allSeats);
+        response.put("seatRows", theatre.getSeatRows());  // Include seatRows
+        response.put("seatsPerRow", theatre.getSeatsPerRow());  // Include seatsPerRow
 
-            return ResponseEntity.ok(response);
-        }
+        return ResponseEntity.ok(response);
+    }
+
 
 
     // Gem en booking
