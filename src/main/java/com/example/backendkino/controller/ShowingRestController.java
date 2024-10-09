@@ -4,7 +4,7 @@ import com.example.backendkino.model.*;
 import com.example.backendkino.repository.*;
 import com.example.backendkino.service.BookingService;
 import com.example.backendkino.service.SeatService;
-import com.example.backendkino.service.ShowingService;
+import com.example.backendkino.service.ShowingServiceimpl;
 import com.example.backendkino.model.Admin;
 import com.example.backendkino.model.Movie;
 import com.example.backendkino.model.Showing;
@@ -29,9 +29,6 @@ import java.util.*;
 @RequestMapping("/showing")
 
 public class ShowingRestController {
-
-    @Autowired
-    private ShowingService showingService;
 
     @Autowired
     private ShowingRepository showingRepository;
@@ -118,9 +115,9 @@ public class ShowingRestController {
 
 
         @GetMapping("/{showingId}/seats")
-        public ResponseEntity<Map<String, Set<Seat>>> getSeatsForShowing(@PathVariable int showingId, @PathVariable Theatre theatre) {
+        public ResponseEntity<Map<String, Set<Seat>>> getSeatsForShowing(@PathVariable int showingId) {
             Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
-            Set<Seat> availableSeats = bookingService.getAvailableSeatsInShowing(showingId, theatre);
+            Set<Seat> availableSeats = bookingService.getAvailableSeatsInShowing(showingId);
 
             Map<String, Set<Seat>> response = new HashMap<>();
             response.put("bookedSeats", bookedSeats);
@@ -131,14 +128,14 @@ public class ShowingRestController {
 
 
     // Gem en booking
-    @PostMapping("/booking")
+    @PostMapping("/booking/{showingId}")
     public ResponseEntity<String> saveBooking(
-            @RequestParam int showingId,
+            @PathVariable int showingId,
             @RequestParam String email,
             @RequestBody List<Integer> seatIds) {
 
         // Find visningen (showing) baseret på showingId
-        Showing showing = showingRepository.getShowingsByShowingId(showingId);
+        Showing showing = showingRepository.getShowingByShowingId(showingId);
 
         // Find sæder baseret på seatIds
         List<Seat> selectedSeats = seatRepository.findAllById(seatIds);
