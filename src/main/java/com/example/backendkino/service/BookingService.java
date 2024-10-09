@@ -3,7 +3,11 @@ package com.example.backendkino.service;
 import com.example.backendkino.model.Booking;
 import com.example.backendkino.model.Seat;
 import com.example.backendkino.model.Showing;
+import com.example.backendkino.model.Theatre;
 import com.example.backendkino.repository.BookingRepository;
+import com.example.backendkino.repository.SeatRepository;
+import com.example.backendkino.repository.ShowingRepository;
+import com.example.backendkino.repository.TheatreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,15 @@ public class BookingService {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private ShowingRepository showingRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private TheatreRepository theatreRepository;
 
     public Booking createBooking(String email, Showing showing, Set<Seat> seatsToBeBooked) {
         Booking booking = new Booking();
@@ -49,5 +62,19 @@ public class BookingService {
             throw new IllegalArgumentException("Booking not found");
         }
         bookingRepository.deleteById(id);
+    }
+
+    public Set<Seat> getBookedSeatsInShowing(int showingId){
+        Showing currentShowing = showingRepository.getShowingByShowingId(showingId);
+        Set<Booking> bookingsInCurrentShowing = bookingRepository.getBookingByShowing(currentShowing);
+        Set<Seat> bookedSeats = seatRepository.getSeatsByBookings(bookingsInCurrentShowing);
+        return bookedSeats;
+    }
+
+    public Set<Seat> getAvailableSeatsInShowing(int showingId){
+        Showing showing = showingRepository.getShowingByShowingId(showingId);
+        Set<Seat> seatsInTheater = seatRepository.getSeatsByTheatre(showing.getTheatre());
+        seatsInTheater.removeAll(getBookedSeatsInShowing(showingId));
+        return seatsInTheater;
     }
 }

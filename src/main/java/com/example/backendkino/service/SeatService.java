@@ -36,9 +36,4 @@ public class SeatService {
         return bookedSeats;
     }
 
-    public Set<Seat> getAvailableSeatsInShowing(int showingId, int theaterId){
-        Set<Seat> seatsInTheater = getSeatsFromTheater(theaterId);
-        seatsInTheater.removeAll(getBookedSeatsInShowing(showingId));
-        return seatsInTheater;
-    }
 }

@@ -1,5 +1,10 @@
 package com.example.backendkino.controller;
 
+import com.example.backendkino.model.*;
+import com.example.backendkino.repository.*;
+import com.example.backendkino.service.BookingService;
+import com.example.backendkino.service.SeatService;
+import com.example.backendkino.service.ShowingServiceimpl;
 import com.example.backendkino.model.Admin;
 import com.example.backendkino.model.Movie;
 import com.example.backendkino.model.Showing;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.*;
 @CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/showing")
@@ -25,10 +31,18 @@ import java.util.List;
 public class ShowingRestController {
 
     @Autowired
+    private ShowingRepository showingRepository;
     ShowingServiceimpl showingService;
 
     @Autowired
-    ShowingRepository showingRepository;
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private BookingService bookingService;
+
 
     @Autowired
     MovieRepository movieRepository;
@@ -97,6 +111,46 @@ public class ShowingRestController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("{\"message\": \"Movie deleted successfully\"}");
+    }
+
+
+        @GetMapping("/{showingId}/seats")
+        public ResponseEntity<Map<String, Set<Seat>>> getSeatsForShowing(@PathVariable int showingId) {
+            Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
+            Set<Seat> availableSeats = bookingService.getAvailableSeatsInShowing(showingId);
+
+            Map<String, Set<Seat>> response = new HashMap<>();
+            response.put("bookedSeats", bookedSeats);
+            response.put("availableSeats", availableSeats);
+
+            return ResponseEntity.ok(response);
+        }
+
+
+    // Gem en booking
+    @PostMapping("/booking/{showingId}")
+    public ResponseEntity<String> saveBooking(
+            @PathVariable int showingId,
+            @RequestParam String email,
+            @RequestBody List<Integer> seatIds) {
+
+        // Find visningen (showing) baseret på showingId
+        Showing showing = showingRepository.getShowingByShowingId(showingId);
+
+        // Find sæder baseret på seatIds
+        List<Seat> selectedSeats = seatRepository.findAllById(seatIds);
+
+        if (selectedSeats.size() != seatIds.size()) {
+            return ResponseEntity.badRequest().body("One or more seats are invalid");
+        }
+
+        // Opret en ny booking med de valgte sæder og brugerens email
+        Booking newBooking = new Booking(new HashSet<>(selectedSeats), showing, email);
+
+        // Gem bookingen i databasen
+        bookingRepository.save(newBooking);
+
+        return ResponseEntity.ok("Booking gemt");
     }
 }
 

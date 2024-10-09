@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/booking")
 @CrossOrigin
 public class BookingRestController {
 
