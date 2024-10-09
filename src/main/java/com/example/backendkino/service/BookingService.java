@@ -71,10 +71,9 @@ public class BookingService {
         return bookedSeats;
     }
 
-    public Set<Seat> getAvailableSeatsInShowing(int showingId){
+    public Set<Seat> getAllSeatsInShowing(int showingId){
         Showing showing = showingRepository.getShowingByShowingId(showingId);
         Set<Seat> seatsInTheater = seatRepository.getSeatsByTheatre(showing.getTheatre());
-        seatsInTheater.removeAll(getBookedSeatsInShowing(showingId));
         return seatsInTheater;
     }
 }

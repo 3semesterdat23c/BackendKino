@@ -1,13 +1,9 @@
 package com.example.backendkino.config;
 
-import com.example.backendkino.model.Admin;
-import com.example.backendkino.model.Movie;
-import com.example.backendkino.model.Showing;
-import com.example.backendkino.repository.AdminRepository;
-import com.example.backendkino.repository.MovieRepository;
-import com.example.backendkino.repository.ShowingRepository;
-import com.example.backendkino.repository.TheatreRepository;
+import com.example.backendkino.model.*;
+import com.example.backendkino.repository.*;
 import com.example.backendkino.service.ApiServiceGetMovies;
+import com.example.backendkino.service.BookingService;
 import com.example.backendkino.service.ShowingServiceimpl;
 import com.example.backendkino.service.TheatreService;
 import jakarta.annotation.PostConstruct;
@@ -15,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class InitDatabase {
@@ -40,6 +38,12 @@ public class InitDatabase {
 
     @Autowired
     private ApiServiceGetMovies apiServiceGetMovies;
+    @Autowired
+    private BookingRepository bookingRepository;
+    @Autowired
+    private SeatRepository seatRepository;
+    @Autowired
+    private BookingService bookingService;
 
     @PostConstruct
     public void init() {
@@ -65,7 +69,7 @@ public class InitDatabase {
         //Create two theatres if none exists
         //Also creates seats
         if (theatreRepository.count() == 0) {
-            theatreService.createTheatre(20, 12);
+            theatreService.createTheatre(10, 10);
             theatreService.createTheatre(25, 16);
         } else {
             System.out.println("Database already has at least one theatre.");
@@ -95,5 +99,24 @@ public class InitDatabase {
         } else {
             System.out.println("Database already has at least one showing.");
         }
+        /*
+        if (bookingRepository.count() == 0) {
+            Showing showing = showingRepository.getShowingByShowingId(1);
+            Seat seat1 = seatRepository.getSeatsBySeatId(1);
+            Seat seat2 = seatRepository.getSeatsBySeatId(2);
+            Seat seat3 = seatRepository.getSeatsBySeatId(3);
+            Seat seat4 = seatRepository.getSeatsBySeatId(4);
+
+            // Explicitly save or re-fetch the seats to ensure they are attached to the current session
+            Set<Seat> bookedSeats = Set.of(seat1,seat2,seat3,seat4);
+
+            // Save both bookings to the repository using managed seats
+            bookingService.createBooking("tislård@gmail.com", showing, bookedSeats);
+        } else {
+            System.out.println("Database already has at least one booking.");
+        }
+
+    */
+
     }
 }
