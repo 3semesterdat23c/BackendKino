@@ -44,6 +44,15 @@ public class ShowingRestController {
         return showingService.getShowTimesByMovieId(movieId); // Implement service to fetch showings
     }
 
+    @GetMapping("/theatres")
+    public List<Theatre> getAllTheatres(){
+        return theatreRepository.findAll();
+    }
+
+    @GetMapping("/admins")
+    public List<Admin> getAllAdmins(){
+        return adminRepository.findAll();
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Showing> createShowing(@RequestBody Showing showtime) {
