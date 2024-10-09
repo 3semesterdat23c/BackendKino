@@ -32,6 +32,8 @@ public class ShowingRestController {
 
     @Autowired
     private ShowingRepository showingRepository;
+
+    @Autowired
     ShowingServiceimpl showingService;
 
     @Autowired
