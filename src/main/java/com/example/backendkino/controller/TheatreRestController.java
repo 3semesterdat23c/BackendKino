@@ -16,10 +16,10 @@ public class TheatreRestController {
     private TheatreService theatreService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTheatre(@RequestParam int seatRows, @RequestParam int seatsPerRow) {
+    public ResponseEntity<?> createTheatre(@RequestBody Theatre theatre) {
         try {
 
-            Theatre createdTheatre = theatreService.createTheatre(seatRows, seatsPerRow);
+            Theatre createdTheatre = theatreService.createTheatre(theatre.getSeatRows(), theatre.getSeatsPerRow());
 
 
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTheatre);
