@@ -139,29 +139,31 @@ public class ShowingRestController {
 
     // Gem en booking
     @PostMapping("/booking/{showingId}")
-    public ResponseEntity<String> saveBooking(
+    public ResponseEntity<Booking> saveBooking(
             @PathVariable int showingId,
             @RequestParam String email,
             @RequestBody List<Integer> seatIds) {
 
-        // Find visningen (showing) baseret på showingId
+        // Find the showing based on showingId
         Showing showing = showingRepository.getShowingByShowingId(showingId);
 
-        // Find sæder baseret på seatIds
+        // Find seats based on seatIds
         List<Seat> selectedSeats = seatRepository.findAllById(seatIds);
 
         if (selectedSeats.size() != seatIds.size()) {
-            return ResponseEntity.badRequest().body("One or more seats are invalid");
+            return ResponseEntity.badRequest().build();
         }
 
-        // Opret en ny booking med de valgte sæder og brugerens email
+        // Create a new booking with the selected seats and user's email
         Booking newBooking = new Booking(new HashSet<>(selectedSeats), showing, email);
 
-        // Gem bookingen i databasen
-        bookingRepository.save(newBooking);
+        // Save the booking in the database
+        Booking savedBooking = bookingRepository.save(newBooking);
 
-        return ResponseEntity.ok("Booking gemt");
+        // Return the saved booking as the response
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
     }
+
 }
 
 
