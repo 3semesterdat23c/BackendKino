@@ -1,6 +1,7 @@
 package com.example.backendkino.model;
 
 import com.example.backendkino.service.BookingService;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,10 +22,11 @@ public class Booking {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinTable(
-            name = "booking_seat", // Join table name
-            joinColumns = @JoinColumn(name = "booking_id"), // Foreign key to Booking
-            inverseJoinColumns = @JoinColumn(name = "seat_id") // Foreign key to Seat
+            name = "booking_seat",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "seat_id")
     )
+    @JsonManagedReference
     private Set<Seat> seats;
 
     @ManyToOne
@@ -33,6 +35,10 @@ public class Booking {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    // Constructors, getters, and setters
+
+
 
     public Booking(Set<Seat> seats, Showing showing, String email) {
         this.seats = seats;

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-
 @Service
 public class BookingService {
 
@@ -56,7 +55,6 @@ public class BookingService {
         return bookingRepository.save(existingBooking);
     }
 
-
     public void deleteBooking(int id) {
         if (!bookingRepository.existsById(id)) {
             throw new IllegalArgumentException("Booking not found");
@@ -64,16 +62,12 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
 
-    public Set<Seat> getBookedSeatsInShowing(int showingId){
-        Showing currentShowing = showingRepository.getShowingByShowingId(showingId);
-        Set<Booking> bookingsInCurrentShowing = bookingRepository.getBookingByShowing(currentShowing);
-        Set<Seat> bookedSeats = seatRepository.getSeatsByBookings(bookingsInCurrentShowing);
-        return bookedSeats;
+    public Set<Seat> getBookedSeatsInShowing(int showingId) {
+        return seatRepository.findByBookings_Showing_ShowingId(showingId);
     }
 
-    public Set<Seat> getAllSeatsInShowing(int showingId){
+    public Set<Seat> getAllSeatsInShowing(int showingId) {
         Showing showing = showingRepository.getShowingByShowingId(showingId);
-        Set<Seat> seatsInTheater = seatRepository.getSeatsByTheatre(showing.getTheatre());
-        return seatsInTheater;
+        return seatRepository.findByTheatre(showing.getTheatre());
     }
 }
