@@ -1,5 +1,6 @@
 package com.example.backendkino.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +31,9 @@ public class Seat {
     @Column(name = "row_Num", nullable = false)
     private int rowNumber;
 
-
     @ManyToMany(mappedBy = "seats", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JsonBackReference
     private Set<Booking> bookings;
+
+    // Constructors, getters, and setters
 }

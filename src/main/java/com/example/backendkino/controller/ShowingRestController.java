@@ -122,12 +122,15 @@ public class ShowingRestController {
         Set<Seat> allSeats = bookingService.getAllSeatsInShowing(showingId);
         Theatre theatre = showingRepository.getShowingByShowingId(showingId).getTheatre();
 
+
+
         // Creating the response map
         Map<String, Object> response = new HashMap<>();
         response.put("bookedSeats", bookedSeats);
         response.put("allSeats", allSeats);
         response.put("seatRows", theatre.getSeatRows());  // Include seatRows
-        response.put("seatsPerRow", theatre.getSeatsPerRow());  // Include seatsPerRow
+        response.put("seatsPerRow", theatre.getSeatsPerRow());// Include seatsPerRow
+
 
         return ResponseEntity.ok(response);
     }
