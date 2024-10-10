@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:63342", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AdminRestController {
@@ -30,6 +30,15 @@ public class AdminRestController {
             return ResponseEntity.ok("Login succesfull");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login request");
+        }
+    }
+
+    @GetMapping("/check-admin-presence")
+    public ResponseEntity<String> checkForAdmin(HttpSession httpSession) {
+        if (httpSession.getAttribute("admin") != null) {
+            return ResponseEntity.ok("Admin session active");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active admin session");
         }
     }
 
