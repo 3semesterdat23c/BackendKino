@@ -2,9 +2,8 @@ package com.example.backendkino.controller;
 
 import com.example.backendkino.model.*;
 import com.example.backendkino.repository.*;
-import com.example.backendkino.service.BookingService;
-import com.example.backendkino.service.SeatService;
-import com.example.backendkino.service.ShowingServiceimpl;
+import com.example.backendkino.service.ApiBookingServiceImpl;
+import com.example.backendkino.service.ApiServiceShowingImpl;
 import com.example.backendkino.model.Admin;
 import com.example.backendkino.model.Movie;
 import com.example.backendkino.model.Showing;
@@ -13,15 +12,12 @@ import com.example.backendkino.repository.AdminRepository;
 import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.repository.ShowingRepository;
 import com.example.backendkino.repository.TheatreRepository;
-import com.example.backendkino.service.ShowingServiceimpl;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
 @CrossOrigin(origins="*")
@@ -34,7 +30,7 @@ public class ShowingRestController {
     private ShowingRepository showingRepository;
 
     @Autowired
-    ShowingServiceimpl showingService;
+    ApiServiceShowingImpl showingService;
 
     @Autowired
     private SeatRepository seatRepository;
@@ -43,7 +39,7 @@ public class ShowingRestController {
     private BookingRepository bookingRepository;
 
     @Autowired
-    private BookingService bookingService;
+    private ApiBookingServiceImpl apiBookingServiceImpl;
 
 
     @Autowired
@@ -118,8 +114,8 @@ public class ShowingRestController {
 
     @GetMapping("/{showingId}/seats")
     public ResponseEntity<Map<String, Object>> getSeatsForShowing(@PathVariable int showingId) {
-        Set<Seat> bookedSeats = bookingService.getBookedSeatsInShowing(showingId);
-        Set<Seat> allSeats = bookingService.getAllSeatsInShowing(showingId);
+        Set<Seat> bookedSeats = apiBookingServiceImpl.getBookedSeatsInShowing(showingId);
+        Set<Seat> allSeats = apiBookingServiceImpl.getAllSeatsInShowing(showingId);
         Theatre theatre = showingRepository.getShowingByShowingId(showingId).getTheatre();
 
 

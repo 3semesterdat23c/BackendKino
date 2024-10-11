@@ -182,8 +182,8 @@ public class ApiServiceGetMoviesImpl implements ApiServiceGetMovies {
     }
 
     private HttpURLConnection createHttpConnection(String urlString) throws Exception {
-        URI uri = new URI(urlString); // Create a URI from the string
-        URL url = uri.toURL(); // Convert the URI to a URL
+        URI uri = new URI(urlString);
+        URL url = uri.toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         return conn;

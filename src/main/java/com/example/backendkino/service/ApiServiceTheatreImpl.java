@@ -4,12 +4,11 @@ import com.example.backendkino.model.Theatre;
 import com.example.backendkino.model.Seat;
 import com.example.backendkino.repository.TheatreRepository;
 import com.example.backendkino.repository.SeatRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TheatreService {
+public class ApiServiceTheatreImpl {
 
     @Autowired
     private TheatreRepository theatreRepository;
@@ -37,8 +36,4 @@ public class TheatreService {
         return savedTheatre;
     }
 
-    public Theatre findTheatreById(Integer theatreId) {
-        return theatreRepository.findById(theatreId)
-                .orElseThrow(() -> new EntityNotFoundException("Theatre not found with ID: " + theatreId));
-    }
 }
