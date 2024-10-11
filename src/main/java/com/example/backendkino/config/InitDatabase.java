@@ -62,6 +62,16 @@ public class InitDatabase {
             admin.setFullName("root");
             admin.setPassword("root");
             adminRepository.save(admin);
+            Admin admin1 = new Admin();
+            admin1.setUsername("Bob123");
+            admin1.setFullName("Bobby Sørensen");
+            admin1.setPassword("bob");
+            adminRepository.save(admin1);
+            Admin admin2 = new Admin();
+            admin2.setUsername("JohnErSej");
+            admin2.setFullName("John Johnson");
+            admin2.setPassword("john");
+            adminRepository.save(admin2);
         } else {
             System.out.println("Database already has at least one Admin user.");
         }
@@ -96,9 +106,38 @@ public class InitDatabase {
                     LocalDateTime.of(2024, 10, 30, 16, 30)
             );
             showingServiceimpl.createShowing(showing2);
+
+            Showing showing3 = new Showing(
+                    3,
+                    LocalDateTime.of(2024, 11, 01, 11, 00),
+                    theatreRepository.getTheatresByTheatreId(2),
+                    movieRepository.findMovieByMovieId(7),
+                    adminRepository.findByUsername("root").get(),
+                    LocalDateTime.of(2024, 10, 30, 14, 14)
+            );
+            showingServiceimpl.createShowing(showing3);
+            Showing showing4 = new Showing(
+                    4,
+                    LocalDateTime.of(2024, 10, 29, 10, 00),
+                    theatreRepository.getTheatresByTheatreId(1),
+                    movieRepository.findMovieByMovieId(1),
+                    adminRepository.findByUsername("root").get(),
+                    LocalDateTime.of(2024, 10, 29, 12, 40)
+            );
+            showingServiceimpl.createShowing(showing4);
+            Showing showing5 = new Showing(
+                    5,
+                    LocalDateTime.of(2024, 11, 03, 11, 00),
+                    theatreRepository.getTheatresByTheatreId(2),
+                    movieRepository.findMovieByMovieId(1),
+                    adminRepository.findByUsername("bob123").get(),
+                    LocalDateTime.of(2024, 11, 03, 13, 40)
+            );
+            showingServiceimpl.createShowing(showing5);
         } else {
             System.out.println("Database already has at least one showing.");
         }
+
         /*
         if (bookingRepository.count() == 0) {
             Showing showing = showingRepository.getShowingByShowingId(1);
