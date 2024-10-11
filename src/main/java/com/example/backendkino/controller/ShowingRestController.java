@@ -30,7 +30,7 @@ public class ShowingRestController {
     private ShowingRepository showingRepository;
 
     @Autowired
-    ApiServiceShowingImpl showingService;
+    private ApiServiceShowingImpl showingService;
 
     @Autowired
     private SeatRepository seatRepository;
@@ -41,15 +41,14 @@ public class ShowingRestController {
     @Autowired
     private ApiBookingServiceImpl apiBookingServiceImpl;
 
+    @Autowired
+    private MovieRepository movieRepository;
 
     @Autowired
-    MovieRepository movieRepository;
+    private TheatreRepository theatreRepository;
 
     @Autowired
-    TheatreRepository theatreRepository;
-
-    @Autowired
-    AdminRepository adminRepository;
+    private AdminRepository adminRepository;
 
     @GetMapping("/showings/{movieId}")
     public List<Showing> getShowingsByMovieId(@PathVariable int movieId) {

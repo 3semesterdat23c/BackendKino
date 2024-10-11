@@ -23,7 +23,7 @@ public class Admin {
     private String username;
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "fullName", nullable = true)
+    @Column(name = "fullName")
     private String fullName;
 
 

@@ -18,9 +18,9 @@ import java.util.Optional;
 public class AdminRestController {
 
     @Autowired
-    ApiServiceGetAdmins apiServiceGetAdmins;
+    private ApiServiceGetAdmins apiServiceGetAdmins;
     @Autowired
-    AdminRepository adminRepository;
+    private AdminRepository adminRepository;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Admin loginRequest, HttpSession httpSession) {

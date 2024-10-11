@@ -10,8 +10,6 @@ import com.example.backendkino.repository.DirectorRepository;
 import com.example.backendkino.repository.GenreRepository;
 import com.example.backendkino.repository.MovieRepository;
 import com.example.backendkino.service.ApiServiceGetMovies;
-import jakarta.persistence.EntityNotFoundException;
-import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
