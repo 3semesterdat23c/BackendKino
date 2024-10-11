@@ -1,6 +1,5 @@
 package com.example.backendkino.repository;
 
-import com.example.backendkino.model.Actor;
 import com.example.backendkino.model.Director;
 import org.springframework.data.jpa.repository.JpaRepository;
 
