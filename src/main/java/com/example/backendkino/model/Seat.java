@@ -34,6 +34,4 @@ public class Seat {
     @ManyToMany(mappedBy = "seats", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JsonBackReference
     private Set<Booking> bookings;
-
-    // Constructors, getters, and setters
 }

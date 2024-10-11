@@ -88,9 +88,9 @@ public class Movie {
         this.poster = poster;
         this.imdbRating = imdbRating;
         this.imdbID = imdbID;
-        this.actors = actors;          // Set the actors
-        this.directors = directors;    // Set the directors
-        this.genres = genres;          // Set the genres
+        this.actors = actors;
+        this.directors = directors;
+        this.genres = genres;
     }
 
 

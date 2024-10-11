@@ -60,20 +60,6 @@ public class MovieRestController {
         return ResponseEntity.ok(updatedMovie);
 
     }
-//    @GetMapping("/{movieId}")
-//    public ResponseEntity<Movie> getMovieById(@PathVariable int movieId) {
-//        Movie movie = movieRepository.findById(movieId)
-//                .orElseThrow(() -> new EntityNotFoundException("Movie not found with id: " + movieId));
-//        return ResponseEntity.ok(movie);
-//    }
-
-/*
-
-        kommune.setKode(kode);
-        Kommune updatedKommune = kommuneRepository.save(kommune);
-        return ResponseEntity.ok(updatedKommune);
-    }*/
-
 
     @PostMapping("/movies")
     @ResponseStatus(HttpStatus.CREATED)

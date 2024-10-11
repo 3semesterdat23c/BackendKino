@@ -12,11 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
-public class ShowingServiceimpl implements ApiServicegetShowing {
+public class ApiServiceShowingImpl implements ApiServicegetShowing {
 
     @Autowired
     private ShowingRepository showingRepository;
@@ -81,28 +80,10 @@ public class ShowingServiceimpl implements ApiServicegetShowing {
 
             // Check for overlaps
             if (startDateTime.isBefore(cleaning)) {
-                return false; // Overlap detected
+                return false;
             }
         }
-        return true; // No overlap
+        return true;
     }
 
-
-//    public Showing createShowing(Theatre theatre, Movie movie, LocalDateTime startTime, Admin admin, LocalDateTime endTime) {
-//        Showing showing = new Showing();
-//        showing.setTheatre(theatre);
-//        showing.setMovie(movie);
-//        showing.setDateTime(startTime);
-//        showing.setEndTime(endTime); // Set the end time as well
-//
-//        return showingRepository.save(showing);
-//    }
-//
-//
-//    // Fetch all showings for a specific movie by movieId
-//    public List<Showing> getShowingsByMovieId(int movieId) {
-//        // Assuming your ShowingRepository has a method to find showings by movie ID
-//        return showingRepository.findByMovie_MovieId(movieId);
-//
-//    }
 }

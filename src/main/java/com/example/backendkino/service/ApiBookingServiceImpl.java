@@ -3,18 +3,16 @@ package com.example.backendkino.service;
 import com.example.backendkino.model.Booking;
 import com.example.backendkino.model.Seat;
 import com.example.backendkino.model.Showing;
-import com.example.backendkino.model.Theatre;
 import com.example.backendkino.repository.BookingRepository;
 import com.example.backendkino.repository.SeatRepository;
 import com.example.backendkino.repository.ShowingRepository;
-import com.example.backendkino.repository.TheatreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 @Service
-public class BookingService {
+public class ApiBookingServiceImpl {
 
     @Autowired
     private BookingRepository bookingRepository;
@@ -24,9 +22,6 @@ public class BookingService {
 
     @Autowired
     private SeatRepository seatRepository;
-
-    @Autowired
-    private TheatreRepository theatreRepository;
 
     public Booking createBooking(String email, Showing showing, Set<Seat> seatsToBeBooked) {
         Booking booking = new Booking();

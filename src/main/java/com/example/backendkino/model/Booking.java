@@ -1,6 +1,5 @@
 package com.example.backendkino.model;
 
-import com.example.backendkino.service.BookingService;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
