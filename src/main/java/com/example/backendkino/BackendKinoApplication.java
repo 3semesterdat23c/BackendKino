@@ -5,11 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class BackendKinoApplication {
-
-    // hej tester
-
     public static void main(String[] args) {
         SpringApplication.run(BackendKinoApplication.class, args);
     }
-//teste teste teste
 }

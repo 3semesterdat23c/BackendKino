@@ -10,22 +10,22 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "genre")
-public class Genre {
+@NoArgsConstructor
+@Table(name = "director")
+public class Director {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "genre_id")
-    private int genreId;
+    @Column(name = "director_id")
+    private int directorId;
 
-    @Column(name = "name", nullable = false)
-    private String genreName;
+    @Column(name = "fullName")
+    private String fullName;
 
 
-    public Genre(String genreName) {
-        this.genreName = genreName;
+    public Director(String fullName) {
+        this.fullName = fullName;
     }
 
 }
