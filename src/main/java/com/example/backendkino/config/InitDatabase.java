@@ -3,9 +3,9 @@ package com.example.backendkino.config;
 import com.example.backendkino.model.*;
 import com.example.backendkino.repository.*;
 import com.example.backendkino.service.ApiServiceGetMovies;
-import com.example.backendkino.service.BookingService;
-import com.example.backendkino.service.ShowingServiceimpl;
-import com.example.backendkino.service.TheatreService;
+
+import com.example.backendkino.service.ApiServiceShowingImpl;
+import com.example.backendkino.service.ApiServiceTheatreImpl;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -28,13 +28,13 @@ public class InitDatabase {
     private TheatreRepository theatreRepository;
 
     @Autowired
-    private TheatreService theatreService;
+    private ApiServiceTheatreImpl theatreService;
 
     @Autowired
     private ShowingRepository showingRepository;
 
     @Autowired
-    private ShowingServiceimpl showingServiceimpl;
+    private ApiServiceShowingImpl showingServiceimpl;
 
     @Autowired
     private ApiServiceGetMovies apiServiceGetMovies;
@@ -42,8 +42,7 @@ public class InitDatabase {
     private BookingRepository bookingRepository;
     @Autowired
     private SeatRepository seatRepository;
-    @Autowired
-    private BookingService bookingService;
+
 
     @PostConstruct
     public void init() {
