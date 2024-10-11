@@ -65,7 +65,7 @@ public class Movie {
     @Column(name = "imdbRating", nullable = false)
     private String imdbRating;
 
-    @Column(name = "imdbID", nullable = false)
+    @Column(name = "imdbID")
     private String imdbID;
 
     public Movie(Integer id, String title, String year, String released, String runtime, String poster, String imdbRating, String imdbID) {
