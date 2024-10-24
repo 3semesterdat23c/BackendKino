@@ -1,12 +1,22 @@
 package com.example.backendkino.controller;
 
+import com.example.backendkino.JwtTokenManager;
 import com.example.backendkino.model.Admin;
+import com.example.backendkino.model.JwtRequestModel;
+import com.example.backendkino.model.JwtResponseModel;
 import com.example.backendkino.repository.AdminRepository;
 import com.example.backendkino.service.ApiServiceGetAdmins;
+import com.example.backendkino.service.IAdminService;
+import com.example.backendkino.service.JwtUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,19 +31,48 @@ public class AdminRestController {
     private ApiServiceGetAdmins apiServiceGetAdmins;
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private IAdminService  iAdminService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
+
+
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Admin loginRequest, HttpSession httpSession) {
-        Optional<Admin> adminOptional = apiServiceGetAdmins.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
-        if (adminOptional.isPresent()) {
-            httpSession.setAttribute("admin", adminOptional.get());
-            return ResponseEntity.ok("Login succesfull");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login request");
+    public ResponseEntity<JwtResponseModel> createToken(@RequestBody JwtRequestModel request) throws Exception {
+        // HttpServletRequest servletRequest is available from Spring, if needed.
+        System.out.println(" JwtController createToken Call: 4" + request.getUsername());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(),
+                            request.getPassword())
+            );
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.ok(new JwtResponseModel("bad credentials"));
         }
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        final String jwtToken = jwtTokenManager.generateJwtToken(userDetails);
+        return ResponseEntity.ok(new JwtResponseModel(jwtToken));
     }
 
-    @GetMapping("/check-admin-presence")
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody Admin loginRequest, HttpSession httpSession) {
+//        Optional<Admin> adminOptional = apiServiceGetAdmins.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+//        if (adminOptional.isPresent()) {
+//            httpSession.setAttribute("admin", adminOptional.get());
+//            return ResponseEntity.ok("Login succesfull");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login request");
+//        }
+//    }
+
+/*    @GetMapping("/check-admin-presence")
     public ResponseEntity<String> checkForAdmin(HttpSession httpSession) {
         if (httpSession.getAttribute("admin") != null) {
             return ResponseEntity.ok("Admin session active");
@@ -41,14 +80,22 @@ public class AdminRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No active admin session");
         }
     }
+*/
+
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Admin admin) {
-        if (adminRepository.findByUsername(admin.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+    public ResponseEntity<JwtResponseModel> signup(@RequestBody JwtRequestModel request){
+        System.out.println("signup: username:" + request.getUsername() + " password: " + request.getPassword() );
+        Admin admin = new Admin(request.getUsername(),request.getPassword(), request.getFullName());
+        if(iAdminService.findByName(admin.getUsername()).size()==0) {
+            if (iAdminService.save(admin) != null) {
+                return ResponseEntity.ok(new JwtResponseModel("created user: " + admin.getUsername() + " pw: " + admin.getPassword()));
+            } else {
+                return ResponseEntity.ok(new JwtResponseModel("error creating user: " + admin.getUsername()));
+            }
+        }else {
+            return ResponseEntity.ok(new JwtResponseModel("error: user exists: " + admin.getUsername()));
         }
-        adminRepository.save(admin);
-        return ResponseEntity.ok("Admin registered successfully");
     }
 
     @GetMapping("/logout")

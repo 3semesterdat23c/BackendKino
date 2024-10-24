@@ -27,5 +27,10 @@ public class Admin {
     private String fullName;
 
 
+    public Admin(String username, String password, String fullName) {
+        this.fullName = fullName;
+        this.password = password;
+        this.username = username;
+    }
 }
 
